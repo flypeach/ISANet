@@ -1,0 +1,199 @@
+# 1.This file shows the parsed IR info when graph evaluating failed to help find the problem.
+# 2.You can search the last `------------------------>` to the node which is inferred failed.
+# 3.Refer to https://www.mindspore.cn/search?inputValue=analyze_fail.dat to get more instructions.
+# ===============================================================================
+
+# [No.1] Default_wrapper.1
+# In file /home/data/yangrq22/isanet-ms/src/test.py:47/    def construct(self, x):/
+funcgraph fg_1(
+        %para1 : Tensor(F32)[1, 1024, 56, 56]    # x
+        , %para2 : Ref[Tensor(F32)][512, 512, 1, 1]    # W.0.weight
+        , %para3 : Ref[Tensor(F32)][512, 1024, 1, 1]    # f_value.weight
+        , %para4 : Ref[Tensor(F32)][512]    # W.1.gamma
+        , %para5 : Ref[Tensor(F32)][512]    # W.1.beta
+        , %para6 : Ref[Tensor(F32)][512]    # W.1.moving_mean
+        , %para7 : Ref[Tensor(F32)][512]    # W.1.moving_variance
+        , %para8 : Ref[Tensor(F32)][256, 1024, 1, 1]    # f_query.0.weight
+        , %para9 : Ref[Tensor(F32)][256, 256, 1, 1]    # f_query.3.weight
+        , %para10 : Ref[Tensor(F32)][256, 1024, 1, 1]    # f_key.0.weight
+        , %para11 : Ref[Tensor(F32)][256, 256, 1, 1]    # f_key.3.weight
+        , %para12 : Ref[Tensor(F32)][256]    # f_query.1.gamma
+        , %para13 : Ref[Tensor(F32)][256]    # f_query.1.beta
+        , %para14 : Ref[Tensor(F32)][256]    # f_query.1.moving_mean
+        , %para15 : Ref[Tensor(F32)][256]    # f_query.1.moving_variance
+        , %para16 : Ref[Tensor(F32)][256]    # f_query.4.gamma
+        , %para17 : Ref[Tensor(F32)][256]    # f_query.4.beta
+        , %para18 : Ref[Tensor(F32)][256]    # f_query.4.moving_mean
+        , %para19 : Ref[Tensor(F32)][256]    # f_query.4.moving_variance
+        , %para20 : Ref[Tensor(F32)][256]    # f_key.1.gamma
+        , %para21 : Ref[Tensor(F32)][256]    # f_key.1.beta
+        , %para22 : Ref[Tensor(F32)][256]    # f_key.1.moving_mean
+        , %para23 : Ref[Tensor(F32)][256]    # f_key.1.moving_variance
+        , %para24 : Ref[Tensor(F32)][256]    # f_key.4.gamma
+        , %para25 : Ref[Tensor(F32)][256]    # f_key.4.beta
+        , %para26 : Ref[Tensor(F32)][256]    # f_key.4.moving_mean
+        , %para27 : Ref[Tensor(F32)][256]    # f_key.4.moving_variance
+    ) {
+
+#------------------------> 0
+    %1 = FuncGraph::fg_17(%para1)    #(Tensor(F32)[1, 1024, 56, 56])    # fg_17=Default.17 #scope: Default
+#[CNode]18
+    Primitive::Return{prim_type=1}(%1)    #(Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:67/        return context/#[CNode]19
+}
+# order:
+#   1: @Default_wrapper.1:[CNode]18{[0]: ValueNode<FuncGraph> Default.17, [1]: x}
+#   2: @Default_wrapper.1:[CNode]19{[0]: ValueNode<Primitive> Return, [1]: [CNode]18}
+
+
+# [No.2] Default.17
+# In file /home/data/yangrq22/isanet-ms/src/test.py:47/    def construct(self, x):/
+funcgraph fg_17[fg_1](
+        %para28 : Tensor(F32)[1, 1024, 56, 56]    # x
+    ) {
+    %1 : Tuple[String]TupleShape(NoShape) = DoSignaturePrimitive::S-Prim-MakeTuple{prim_type=1}("axis")    #(StringNoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:59/        softmax = ops.Softmax(axis=3) # -1/#[CNode]20
+    %2 : Tuple[I64]TupleShape(NoShape) = DoSignaturePrimitive::S-Prim-MakeTuple{prim_type=1}(I64(3))    #(I64NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:59/        softmax = ops.Softmax(axis=3) # -1/#[CNode]21
+    %3 : Dictionary[[axis,],[Int64]]NoShape = DoSignaturePrimitive::S-Prim-make_dict{prim_type=1}(%1, %2)    #(Tuple[String]TupleShape(NoShape), Tuple[I64]TupleShape(NoShape)) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:59/        softmax = ops.Softmax(axis=3) # -1/#[CNode]22
+    %4 : FuncNoShape = UnpackCall::unpack_call(ClassType, %3)    #(FuncNoShape, Dictionary[[axis,],[Int64]]NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:59/        softmax = ops.Softmax(axis=3) # -1/#softmax
+    %5 : F32NoShape = DoSignaturePrimitive::S-Prim-negative{prim_type=1}(F32(0.5))    #(F32NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:58/        sim_map = (self.key_channels**-.5) * sim_map/#[CNode]23
+    %6 : F32NoShape = DoSignaturePrimitive::S-Prim-pow{prim_type=1}(I64(256), %5)    #(I64NoShape, F32NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:58/        sim_map = (self.key_channels**-.5) * sim_map/#[CNode]24
+    %7 : Tensor(F32)[1, 256, 56, 56] = FuncGraph::fg_25(%para28)    #(Tensor(F32)[1, 1024, 56, 56])    # fg_25=SequentialCell.25 #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:52/        query = self.f_query(x).view((batch_size, self.key_channels, -1))/#[CNode]26
+    %8 : FuncNoShape = Primitive::getattr{prim_type=1}(%7, "view")    #(Tensor(F32)[1, 256, 56, 56], StringNoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:52/        query = self.f_query(x).view((batch_size, self.key_channels, -1))/#[CNode]27
+    %9 : Tuple[I64*4]TupleShape(NoShape, NoShape, NoShape, NoShape) = Primitive::getattr{prim_type=1}(%para28, "shape")    #(Tensor(F32)[1, 1024, 56, 56], StringNoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:48/        batch_size, h, w = x.shape[0], x.shape[2], x.shape[3]/#[CNode]28
+    %10 : I64NoShape = DoSignaturePrimitive::S-Prim-getitem{prim_type=1}(%9, I64(0))    #(Tuple[I64*4]TupleShape(NoShape, NoShape, NoShape, NoShape), I64NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:48/        batch_size, h, w = x.shape[0], x.shape[2], x.shape[3]/#[CNode]29
+    %11 : Tuple[I64*4]TupleShape(NoShape, NoShape, NoShape, NoShape) = Primitive::getattr{prim_type=1}(%para28, "shape")    #(Tensor(F32)[1, 1024, 56, 56], StringNoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:48/        batch_size, h, w = x.shape[0], x.shape[2], x.shape[3]/#[CNode]30
+    %12 : I64NoShape = DoSignaturePrimitive::S-Prim-getitem{prim_type=1}(%11, I64(2))    #(Tuple[I64*4]TupleShape(NoShape, NoShape, NoShape, NoShape), I64NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:48/        batch_size, h, w = x.shape[0], x.shape[2], x.shape[3]/#[CNode]31
+    %13 : Tuple[I64*4]TupleShape(NoShape, NoShape, NoShape, NoShape) = Primitive::getattr{prim_type=1}(%para28, "shape")    #(Tensor(F32)[1, 1024, 56, 56], StringNoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:48/        batch_size, h, w = x.shape[0], x.shape[2], x.shape[3]/#[CNode]32
+    %14 : I64NoShape = DoSignaturePrimitive::S-Prim-getitem{prim_type=1}(%13, I64(3))    #(Tuple[I64*4]TupleShape(NoShape, NoShape, NoShape, NoShape), I64NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:48/        batch_size, h, w = x.shape[0], x.shape[2], x.shape[3]/#[CNode]33
+    %15 : Tuple[I64*3]TupleShape(NoShape, NoShape, NoShape) = DoSignaturePrimitive::S-Prim-MakeTuple{prim_type=1}(%10, %12, %14)    #(I64NoShape, I64NoShape, I64NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:48/        batch_size, h, w = x.shape[0], x.shape[2], x.shape[3]/#[CNode]34
+    %16 : I64NoShape = DoSignaturePrimitive::S-Prim-getitem{prim_type=1}(%15, I64(0))    #(Tuple[I64*3]TupleShape(NoShape, NoShape, NoShape), I64NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:48/        batch_size, h, w = x.shape[0], x.shape[2], x.shape[3]/#batch_size
+    %17 : I64NoShape = DoSignaturePrimitive::S-Prim-negative{prim_type=1}(I64(1))    #(I64NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:52/        query = self.f_query(x).view((batch_size, self.key_channels, -1))/#[CNode]35
+    %18 : Tuple[I64*3]TupleShape(NoShape, NoShape, NoShape) = DoSignaturePrimitive::S-Prim-MakeTuple{prim_type=1}(%16, I64(256), %17)    #(I64NoShape, I64NoShape, I64NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:52/        query = self.f_query(x).view((batch_size, self.key_channels, -1))/#[CNode]36
+    %19 : Tensor(F32)[1, 256, 3136] = %8(%18)    #(Tuple[I64*3]TupleShape(NoShape, NoShape, NoShape)) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:52/        query = self.f_query(x).view((batch_size, self.key_channels, -1))/#query
+    %20 : Tuple[I64*3]TupleShape(NoShape, NoShape, NoShape) = DoSignaturePrimitive::S-Prim-MakeTuple{prim_type=1}(I64(0), I64(2), I64(1))    #(I64NoShape, I64NoShape, I64NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:53/        query = ops.transpose(query, (0, 2, 1))/#[CNode]37
+    %21 : Tensor(F32)[1, 3136, 256] = FuncGraph::fg_38(%19, %20)    #(Tensor(F32)[1, 256, 3136], Tuple[I64*3]TupleShape(NoShape, NoShape, NoShape))    # fg_38=transpose.38 #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:53/        query = ops.transpose(query, (0, 2, 1))/#query
+    %22 : Tensor(F32)[1, 256, 56, 56] = FuncGraph::fg_39(%para28)    #(Tensor(F32)[1, 1024, 56, 56])    # fg_39=SequentialCell.39 #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:54/        key = self.f_key(x).view((batch_size, self.key_channels, -1))/#[CNode]40
+    %23 : FuncNoShape = Primitive::getattr{prim_type=1}(%22, "view")    #(Tensor(F32)[1, 256, 56, 56], StringNoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:54/        key = self.f_key(x).view((batch_size, self.key_channels, -1))/#[CNode]41
+    %24 : I64NoShape = DoSignaturePrimitive::S-Prim-negative{prim_type=1}(I64(1))    #(I64NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:54/        key = self.f_key(x).view((batch_size, self.key_channels, -1))/#[CNode]42
+    %25 : Tuple[I64*3]TupleShape(NoShape, NoShape, NoShape) = DoSignaturePrimitive::S-Prim-MakeTuple{prim_type=1}(%16, I64(256), %24)    #(I64NoShape, I64NoShape, I64NoShape) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:54/        key = self.f_key(x).view((batch_size, self.key_channels, -1))/#[CNode]43
+    %26 : Tensor(F32)[1, 256, 3136] = %23(%25)    #(Tuple[I64*3]TupleShape(NoShape, NoShape, NoShape)) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:54/        key = self.f_key(x).view((batch_size, self.key_channels, -1))/#key
+    %27 : Tensor(F32)[1, 3136, 3136] = FuncGraph::fg_44(%21, %26)    #(Tensor(F32)[1, 3136, 256], Tensor(F32)[1, 256, 3136])    # fg_44=matmul.44 #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:57/        sim_map = ops.matmul(query, key)/#sim_map
+    %28 : Tensor(F32)[1, 3136, 3136] = DoSignaturePrimitive::S-Prim-mul{prim_type=1}(%6, %27)    #(F32NoShape, Tensor(F32)[1, 3136, 3136]) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:58/        sim_map = (self.key_channels**-.5) * sim_map/#sim_map
+
+#------------------------> 1
+    %29 = %4(%28)    #(Tensor(F32)[1, 3136, 3136]) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:60/        sim_map = softmax(sim_map)/#sim_map
+    %30 = FuncGraph::fg_45(%para28)    #(Tensor(F32)[1, 1024, 56, 56])    # fg_45=Conv2d.45 #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:50/        value = self.f_value(x).view((batch_size, self.value_channels, -1))/#[CNode]46
+    %31 = Primitive::getattr{prim_type=1}(%30, "view")    #(Undefined, Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:50/        value = self.f_value(x).view((batch_size, self.value_channels, -1))/#[CNode]47
+    %32 = DoSignaturePrimitive::S-Prim-negative{prim_type=1}(I64(1))    #(Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:50/        value = self.f_value(x).view((batch_size, self.value_channels, -1))/#[CNode]48
+    %33 = DoSignaturePrimitive::S-Prim-MakeTuple{prim_type=1}(%16, I64(512), %32)    #(I64NoShape, Undefined, Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:50/        value = self.f_value(x).view((batch_size, self.value_channels, -1))/#[CNode]49
+    %34 = %31(%33)    #(Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:50/        value = self.f_value(x).view((batch_size, self.value_channels, -1))/#value
+    %35 = DoSignaturePrimitive::S-Prim-MakeTuple{prim_type=1}(I64(0), I64(2), I64(1))    #(Undefined, Undefined, Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:51/        value = ops.transpose(value, (0, 2, 1))/#[CNode]50
+    %36 = FuncGraph::fg_38(%34, %35)    #(Undefined, Undefined)    # fg_38=transpose.38 #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:51/        value = ops.transpose(value, (0, 2, 1))/#value
+    %37 = FuncGraph::fg_44(%29, %36)    #(Undefined, Undefined)    # fg_44=matmul.44 #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:62/        context = ops.matmul(sim_map, value)/#context
+    %38 = DoSignaturePrimitive::S-Prim-MakeTuple{prim_type=1}(I64(0), I64(2), I64(1))    #(Undefined, Undefined, Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:64/        context = ops.transpose(context, (0, 2, 1))/#[CNode]51
+    %39 = FuncGraph::fg_38(%37, %38)    #(Undefined, Undefined)    # fg_38=transpose.38 #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:64/        context = ops.transpose(context, (0, 2, 1))/#context
+    %40 = Primitive::getattr{prim_type=1}(%39, "view")    #(Undefined, Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:65/        context = context.view((batch_size, self.value_channels, h, w))/#[CNode]52
+    %41 = DoSignaturePrimitive::S-Prim-getitem{prim_type=1}(%15, I64(1))    #(Tuple[I64*3]TupleShape(NoShape, NoShape, NoShape), Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:48/        batch_size, h, w = x.shape[0], x.shape[2], x.shape[3]/#h
+    %42 = DoSignaturePrimitive::S-Prim-getitem{prim_type=1}(%15, I64(2))    #(Tuple[I64*3]TupleShape(NoShape, NoShape, NoShape), Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:48/        batch_size, h, w = x.shape[0], x.shape[2], x.shape[3]/#w
+    %43 = DoSignaturePrimitive::S-Prim-MakeTuple{prim_type=1}(%16, I64(512), %41, %42)    #(I64NoShape, Undefined, Undefined, Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:65/        context = context.view((batch_size, self.value_channels, h, w))/#[CNode]53
+    %44 = %40(%43)    #(Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:65/        context = context.view((batch_size, self.value_channels, h, w))/#context
+    %45 = FuncGraph::fg_54(%44)    #(Undefined)    # fg_54=SequentialCell.54 #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:66/        context = self.W(context)/#context
+    Primitive::Return{prim_type=1}(%45)    #(Undefined) #scope: Default
+      # In file /home/data/yangrq22/isanet-ms/src/test.py:67/        return context/#[CNode]55
+}
+# order:
+#   1: @Default.17:[CNode]28{[0]: ValueNode<Primitive> getattr, [1]: x, [2]: ValueNode<StringImm> shape}
+#   2: @Default.17:[CNode]29{[0]: ValueNode<DoSignaturePrimitive> S-Prim-getitem, [1]: [CNode]28, [2]: ValueNode<Int64Imm> 0}
+#   3: @Default.17:[CNode]30{[0]: ValueNode<Primitive> getattr, [1]: x, [2]: ValueNode<StringImm> shape}
+#   4: @Default.17:[CNode]31{[0]: ValueNode<DoSignaturePrimitive> S-Prim-getitem, [1]: [CNode]30, [2]: ValueNode<Int64Imm> 2}
+#   5: @Default.17:[CNode]32{[0]: ValueNode<Primitive> getattr, [1]: x, [2]: ValueNode<StringImm> shape}
+#   6: @Default.17:[CNode]33{[0]: ValueNode<DoSignaturePrimitive> S-Prim-getitem, [1]: [CNode]32, [2]: ValueNode<Int64Imm> 3}
+#   7: @Default.17:[CNode]34{[0]: ValueNode<DoSignaturePrimitive> S-Prim-MakeTuple, [1]: [CNode]29, [2]: [CNode]31, [3]: [CNode]33}
+#   8: @Default.17:batch_size{[0]: ValueNode<DoSignaturePrimitive> S-Prim-getitem, [1]: [CNode]34, [2]: ValueNode<Int64Imm> 0}
+#   9: @Default.17:h{[0]: ValueNode<DoSignaturePrimitive> S-Prim-getitem, [1]: [CNode]34, [2]: ValueNode<Int64Imm> 1}
+#  10: @Default.17:w{[0]: ValueNode<DoSignaturePrimitive> S-Prim-getitem, [1]: [CNode]34, [2]: ValueNode<Int64Imm> 2}
+#  11: @Default.17:[CNode]46{[0]: ValueNode<FuncGraph> Conv2d.45, [1]: x}
+#  12: @Default.17:[CNode]47{[0]: ValueNode<Primitive> getattr, [1]: [CNode]46, [2]: ValueNode<StringImm> view}
+#  13: @Default.17:[CNode]48{[0]: ValueNode<DoSignaturePrimitive> S-Prim-negative, [1]: ValueNode<Int64Imm> 1}
+#  14: @Default.17:[CNode]49{[0]: ValueNode<DoSignaturePrimitive> S-Prim-MakeTuple, [1]: batch_size, [2]: ValueNode<Int64Imm> 512, [3]: [CNode]48}
+#  15: @Default.17:value{[0]: [CNode]47, [1]: [CNode]49}
+#  16: @Default.17:[CNode]50{[0]: ValueNode<DoSignaturePrimitive> S-Prim-MakeTuple, [1]: ValueNode<Int64Imm> 0, [2]: ValueNode<Int64Imm> 2, [3]: ValueNode<Int64Imm> 1}
+#  17: @Default.17:value{[0]: ValueNode<FuncGraph> transpose.38, [1]: value, [2]: [CNode]50}
+#  18: @Default.17:[CNode]26{[0]: ValueNode<FuncGraph> SequentialCell.25, [1]: x}
+#  19: @Default.17:[CNode]27{[0]: ValueNode<Primitive> getattr, [1]: [CNode]26, [2]: ValueNode<StringImm> view}
+#  20: @Default.17:[CNode]35{[0]: ValueNode<DoSignaturePrimitive> S-Prim-negative, [1]: ValueNode<Int64Imm> 1}
+#  21: @Default.17:[CNode]36{[0]: ValueNode<DoSignaturePrimitive> S-Prim-MakeTuple, [1]: batch_size, [2]: ValueNode<Int64Imm> 256, [3]: [CNode]35}
+#  22: @Default.17:query{[0]: [CNode]27, [1]: [CNode]36}
+#  23: @Default.17:[CNode]37{[0]: ValueNode<DoSignaturePrimitive> S-Prim-MakeTuple, [1]: ValueNode<Int64Imm> 0, [2]: ValueNode<Int64Imm> 2, [3]: ValueNode<Int64Imm> 1}
+#  24: @Default.17:query{[0]: ValueNode<FuncGraph> transpose.38, [1]: query, [2]: [CNode]37}
+#  25: @Default.17:[CNode]40{[0]: ValueNode<FuncGraph> SequentialCell.39, [1]: x}
+#  26: @Default.17:[CNode]41{[0]: ValueNode<Primitive> getattr, [1]: [CNode]40, [2]: ValueNode<StringImm> view}
+#  27: @Default.17:[CNode]42{[0]: ValueNode<DoSignaturePrimitive> S-Prim-negative, [1]: ValueNode<Int64Imm> 1}
+#  28: @Default.17:[CNode]43{[0]: ValueNode<DoSignaturePrimitive> S-Prim-MakeTuple, [1]: batch_size, [2]: ValueNode<Int64Imm> 256, [3]: [CNode]42}
+#  29: @Default.17:key{[0]: [CNode]41, [1]: [CNode]43}
+#  30: @Default.17:sim_map{[0]: ValueNode<FuncGraph> matmul.44, [1]: query, [2]: key}
+#  31: @Default.17:[CNode]23{[0]: ValueNode<DoSignaturePrimitive> S-Prim-negative, [1]: ValueNode<FP32Imm> 0.500000}
+#  32: @Default.17:[CNode]24{[0]: ValueNode<DoSignaturePrimitive> S-Prim-pow, [1]: ValueNode<Int64Imm> 256, [2]: [CNode]23}
+#  33: @Default.17:sim_map{[0]: ValueNode<DoSignaturePrimitive> S-Prim-mul, [1]: [CNode]24, [2]: sim_map}
+#  34: @Default.17:[CNode]20{[0]: ValueNode<DoSignaturePrimitive> S-Prim-MakeTuple, [1]: ValueNode<StringImm> axis}
+#  35: @Default.17:[CNode]21{[0]: ValueNode<DoSignaturePrimitive> S-Prim-MakeTuple, [1]: ValueNode<Int64Imm> 3}
+#  36: @Default.17:[CNode]22{[0]: ValueNode<DoSignaturePrimitive> S-Prim-make_dict, [1]: [CNode]20, [2]: [CNode]21}
+#  37: @Default.17:softmax{[0]: ValueNode<UnpackCall> unpack_call.56, [1]: ValueNode<ClassType> class 'mindspore.ops.operations.nn_ops.Softmax', [2]: [CNode]22}
+#  38: @Default.17:sim_map{[0]: softmax, [1]: sim_map}
+#  39: @Default.17:context{[0]: ValueNode<FuncGraph> matmul.44, [1]: sim_map, [2]: value}
+#  40: @Default.17:[CNode]51{[0]: ValueNode<DoSignaturePrimitive> S-Prim-MakeTuple, [1]: ValueNode<Int64Imm> 0, [2]: ValueNode<Int64Imm> 2, [3]: ValueNode<Int64Imm> 1}
+#  41: @Default.17:context{[0]: ValueNode<FuncGraph> transpose.38, [1]: context, [2]: [CNode]51}
+#  42: @Default.17:[CNode]52{[0]: ValueNode<Primitive> getattr, [1]: context, [2]: ValueNode<StringImm> view}
+#  43: @Default.17:[CNode]53{[0]: ValueNode<DoSignaturePrimitive> S-Prim-MakeTuple, [1]: batch_size, [2]: ValueNode<Int64Imm> 512, [3]: h, [4]: w}
+#  44: @Default.17:context{[0]: [CNode]52, [1]: [CNode]53}
+#  45: @Default.17:context{[0]: ValueNode<FuncGraph> SequentialCell.54, [1]: context}
+#  46: @Default.17:[CNode]55{[0]: ValueNode<Primitive> Return, [1]: context}
+
+
+#===============================================================================
+# num of function graphs in stack: 2/3 (Ignored 1 internal frames).

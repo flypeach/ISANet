@@ -4,6 +4,8 @@ import mindspore.nn as nn
 import mindspore.ops as ops
 import numpy as np
 
+import torch.nn as torch_nn
+
 class SelfAttentionBlock2D(nn.Cell): # 迁移完成
     def __init__(self, in_channels, key_channels, value_channels, out_channels=None, bn_type=None):
         super(SelfAttentionBlock2D, self).__init__()

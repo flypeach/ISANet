@@ -41,21 +41,22 @@ class SelfAttentionBlock2D(nn.Cell): # 迁移完成
     def construct(self, x):
         batch_size, h, w = x.shape[0], x.shape[2], x.shape[3]
 
-        value = self.f_value(x).view(batch_size, self.value_channels, -1)
+        value = self.f_value(x).view((batch_size, self.value_channels, -1))
         value = ops.transpose(value, (0, 2, 1))
-        query = self.f_query(x).view(batch_size, self.key_channels, -1)
+        query = self.f_query(x).view((batch_size, self.key_channels, -1))
         query = ops.transpose(query, (0, 2, 1))
-        key = self.f_key(x).view(batch_size, self.key_channels, -1)
+        key = self.f_key(x).view((batch_size, self.key_channels, -1))
 
-        matmul = ops.BatchMatMul()
-        sim_map = matmul(query, key)
+        # matmul = ops.BatchMatMul()
+        sim_map = ops.matmul(query, key)
         sim_map = (self.key_channels**-.5) * sim_map
-        softmax = ops.Softmax()
+        softmax = ops.Softmax(axis=-1)
         sim_map = softmax(sim_map)
 
-        context = matmul(sim_map, value)
+        context = ops.matmul(sim_map, value)
         # context = ops.Reshape(ops.transpose(context, (0, 2, 1)), (batch_size, self.value_channels, h, w)) # torch.reshape() 大致相当于tensor.contiguous().view()
-        context = ops.transpose(context, (0, 2, 1)).view(batch_size, self.value_channels, h, w)
+        context = ops.transpose(context, (0, 2, 1))
+        context = context.view((batch_size, self.value_channels, h, w))
         context = self.W(context)
         return context
 
@@ -77,27 +78,27 @@ class ISA_Block(nn.Cell): # 迁移完成
         # pad the feature if the size is not divisible
         pad_h, pad_w = out_h * dh - h, out_w * dw - w
         if pad_h > 0 or pad_w > 0:  # padding in both left&right sides
-            pad_op = nn.Pad(paddings=(pad_w//2, pad_w - pad_w//2, pad_h//2, pad_h - pad_h//2))
+            pad_op = nn.Pad(paddings=((0, 0), (0, 0), (pad_h//2, pad_h - pad_h//2), (pad_w//2, pad_w - pad_w//2)))
             feats = pad_op(x)
         else:
             feats = x
         
         # long range attention
-        feats = feats.view(n, c, out_h, dh, out_w, dw)
+        feats = feats.view((n, c, out_h, dh, out_w, dw))
         #feats = feats.permute(0, 3, 5, 1, 2, 4).contiguous().view(-1, c, out_h, out_w)
-        feats = ops.transpose(feats, (0, 3, 5, 1, 2, 4)).view(-1, c, out_h, out_w)
+        feats = ops.transpose(feats, (0, 3, 5, 1, 2, 4)).view((-1, c, out_h, out_w))
         feats = self.long_range_sa(feats)
         c = self.out_channels
 
         # short range attention
-        feats = feats.view(n, dh, dw, c, out_h, out_w)
+        feats = feats.view((n, dh, dw, c, out_h, out_w))
         #feats = feats.permute(0, 4, 5, 3, 1, 2).contiguous().view(-1, c, dh, dw)
-        feats = ops.transpose(feats, (0, 4, 5, 3, 1, 2)).view(-1, c, dh, dw)
+        feats = ops.transpose(feats, (0, 4, 5, 3, 1, 2)).view((-1, c, dh, dw))
         feats = self.short_range_sa(feats)
         #feats = feats.view(n, out_h, out_w, c, dh, dw).permute(0, 3, 1, 4, 2, 5)
-        feats = ops.transpose(feats.view(n, out_h, out_w, c, dh, dw), (0, 3, 1, 4, 2, 5))
+        feats = ops.transpose(feats.view((n, out_h, out_w, c, dh, dw)), (0, 3, 1, 4, 2, 5))
         #feats = feats.contiguous().view(n, c, dh * out_h, dw * out_w)
-        feats = feats.view(n, c, dh * out_h, dw * out_w)
+        feats = feats.view((n, c, dh * out_h, dw * out_w))
 
         # remove padding
         if pad_h > 0 or pad_w > 0:
@@ -145,20 +146,22 @@ class ISA_Module(nn.Cell): # 迁移完毕
             context = priors[0]
         else:
             #context = torch.cat(priors, dim=1)
-            context = cat(priors)
+            op = ops.Concat(axis=1)
+            context = op(priors)
             x = self.up_conv(x)
         # residual connection
         #return self.conv_bn(torch.cat([x, context], dim=1))
         # self.print('print Tensor context:',context)
         # return x
-        return self.conv_bn(cat([x, context]))
+        op = ops.Concat(axis=1)
+        return self.conv_bn(op([x, context]))
         # return self.conv_bn(cat([x, cast_op(context, mindspore.float32)]))
 
 if __name__ == "__main__":
     
-
-
+    print('start')
     feats = ops.standard_normal((1, 1024, 56, 56))
+    print(1)
     print(feats.shape)
     print(feats.dtype)
     # model = SelfAttentionBlock2D(in_channels=1024, key_channels=256, value_channels=512, out_channels=512)
